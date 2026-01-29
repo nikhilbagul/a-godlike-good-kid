@@ -11,7 +11,7 @@ iOS (iPad exclusive), Android (under Dev)
 # Tech stack
 Unity, C#, Fungus, iTween
 
-# This game was a part of our capstone project in our Master's program at UC Santa Cruz. The team consisted of 4 developers, 14 artists, and 2 audio designers.
+This game was a part of our capstone project in our Master's program at UC Santa Cruz. The team consisted of 4 developers, 14 artists, and 2 audio designers.
 
 # My role in the team
 - Developer and the Development Director
