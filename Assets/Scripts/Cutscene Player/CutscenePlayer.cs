@@ -155,6 +155,7 @@ public class CutscenePlayer : MonoBehaviour
 
         if (Callback != null)
             Callback();
+
         sceneElapsed = 0;
         SetTapCounting();
     }

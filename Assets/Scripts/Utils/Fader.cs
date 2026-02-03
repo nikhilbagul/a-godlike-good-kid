@@ -4,14 +4,13 @@ using System;
 
 public class Fader : MonoBehaviour
 {
-    public static float _fadeDuration;
-
     [SerializeField] [Range (0.1f, 3.0f)]
     private float fadeDuration = 2f;
 
     private bool fading = false;
     private Color opaque = new Color(1, 1, 1, 0), transparent = new Color(1, 1, 1, 1);
     private float increment;
+    public static float _fadeDuration;
 
     void Start()
     {
@@ -19,9 +18,8 @@ public class Fader : MonoBehaviour
         _fadeDuration = fadeDuration;
     }
 
-
     public void FadePageOut() { FadeIn(); }
-    public void FadeIn(SpriteRenderer spr = null, CanvasGroup cvg = null)
+    public void FadeIn(SpriteRenderer spr = null, CanvasGroup cvg = null, float duration = 2f)
     {
         if (!cvg)
         {
@@ -30,19 +28,19 @@ public class Fader : MonoBehaviour
 
             spr.color = opaque;
             if (spr)
-                StartCoroutine(Fade(() => spr.color.a < 1, spr, true));
+                StartCoroutine(Fade(() => spr.color.a < 1, spr, true, duration));
         }
         else
         {
             cvg.alpha = 0;
-            StartCoroutine(Fade(() => cvg.alpha < 1, cvg, true));
+            StartCoroutine(Fade(() => cvg.alpha < 1, cvg, true, duration));
         }
 
         fading = true;
     }
 
     public void FadePageIn() { FadeOut(); }
-    public void FadeOut(SpriteRenderer spr = null, CanvasGroup cvg = null)
+    public void FadeOut(SpriteRenderer spr = null, CanvasGroup cvg = null, float duration = 2f)
     {
         if (!cvg)
         {
@@ -51,13 +49,13 @@ public class Fader : MonoBehaviour
          
             spr.color = transparent;
             if (spr)
-                StartCoroutine(Fade(() => spr.color.a > 0, spr, false));
+                StartCoroutine(Fade(() => spr.color.a > 0, spr, false, duration));
         }
 
         else
         {
             cvg.alpha = 1;
-            StartCoroutine(Fade(() => cvg.alpha > 0, cvg, false));
+            StartCoroutine(Fade(() => cvg.alpha > 0, cvg, false, duration));
         }
         fading = true;
     }
@@ -72,8 +70,10 @@ public class Fader : MonoBehaviour
         return fadeDuration;
     }
 
-    IEnumerator Fade(Func<bool> condition, SpriteRenderer spr, bool makeOpaque)
+    IEnumerator Fade(Func<bool> condition, SpriteRenderer spr, bool makeOpaque, float duration)
     {
+        increment = 1 / duration;        
+
         Color c = spr.color;
         while (spr && condition())
         {
@@ -84,8 +84,10 @@ public class Fader : MonoBehaviour
         fading = false;
     }
 
-    IEnumerator Fade(Func<bool> condition, CanvasGroup cvg, bool makeOpaque)
+    IEnumerator Fade(Func<bool> condition, CanvasGroup cvg, bool makeOpaque, float duration)
     {
+        increment = 1 / duration;
+
         while (cvg && condition())
         {
             cvg.alpha = cvg.alpha + increment * Time.deltaTime * ((makeOpaque) ? 1 : -1);
