@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Ch1_P1 : PageManager 
 {
@@ -24,17 +25,14 @@ public class Ch1_P1 : PageManager
 	Fader faderUtility;
 	SpriteRenderer[] spriteRenderers;
 
-    public void	fail()
-	{
-		numbOfFails+=1;		
-		SetSolved (advance: false);
-	}
+    bool isAcceptingInput = false;
+    bool nextStepRequested = false;
 
 	void Awake()
 	{
 		cutscenePlayer = FindFirstObjectByType<CutscenePlayer>();
         faderUtility = FindFirstObjectByType<Fader>();
-		spriteRenderers = allSprites.GetComponentsInChildren<SpriteRenderer>();
+		spriteRenderers = allSprites.GetComponentsInChildren<SpriteRenderer>();        
     }
 
 	protected override void Start()
@@ -42,6 +40,7 @@ public class Ch1_P1 : PageManager
 		base.Start();        
         Debug.Log ("numbOfFails: " + numbOfFails);
         StartCoroutine(PlayStorySequence());
+        StartCoroutine(BeginInputCooldown(3.0f));
     }
 
 	void Update()
@@ -49,7 +48,14 @@ public class Ch1_P1 : PageManager
 		//numbOfFails = (State)cutscenePlayer.GetIntegerVariable("State");
 	}
 
-	public void win(){
+    public void	fail()
+	{
+		numbOfFails+=1;		
+		SetSolved (advance: false);
+	}
+
+	public void win()
+    {
 		SetSolved (advance: true);
 	}
 
@@ -59,49 +65,56 @@ public class Ch1_P1 : PageManager
 		{            
             SetSpriteRenderersVisibility(false);            
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(2);
 
 			faderUtility.FadeIn(emptyRestaurant);
-            Camera.main.GetComponent<CameraSaturation>().Desaturate();			
-
-            yield return new WaitForSeconds(2);
+            Camera.main.GetComponent<CameraSaturation>().Desaturate();
+            
+            yield return new WaitUntil(() => nextStepRequested == true);
+            nextStepRequested = false;
 
             faderUtility.FadeIn(fayeErnestRestaurant);
             faderUtility.FadeIn(propCandle);
             faderUtility.FadeIn(propCup);
             faderUtility.FadeIn(propSalt);
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitUntil(() => nextStepRequested == true);
+            nextStepRequested = false;
 
 			faderUtility.FadeIn(caption1);
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitUntil(() => nextStepRequested == true);
+            nextStepRequested = false;
 
             faderUtility.FadeIn(speechBubble1);
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitUntil(() => nextStepRequested == true);
+            nextStepRequested = false;
 
             faderUtility.FadeIn(speechBubble2);
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitUntil(() => nextStepRequested == true);
+            nextStepRequested = false;
 
-            faderUtility.FadeOut(speechBubble1, null, 1);
+            faderUtility.FadeOut(speechBubble1, null, 0.5f);
             faderUtility.FadeIn(speechBubble3, null, 2);
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitUntil(() => nextStepRequested == true);
+            nextStepRequested = false;
 
-            faderUtility.FadeOut(speechBubble2, null, 1);
+            faderUtility.FadeOut(speechBubble2, null, 0.5f);
             faderUtility.FadeIn(speechBubble4, null, 2);
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitUntil(() => nextStepRequested == true);
+            nextStepRequested = false;
 
             faderUtility.FadeOut(caption1, null, 1);
             faderUtility.FadeOut(speechBubble3, null, 1);
             faderUtility.FadeOut(speechBubble4, null, 1);
 
-            yield return new WaitForSeconds(2);
-            Camera.main.GetComponent<CameraSaturation>().Saturate();
+            yield return new WaitForSeconds(2.0f);            
 
+            Camera.main.GetComponent<CameraSaturation>().Saturate();
 
         }
 		else if (numbOfFails >= 1)
@@ -125,4 +138,20 @@ public class Ch1_P1 : PageManager
                 sprite.color = new Color(1, 1, 1, 0);            
 		}
 	}
+
+    public void OnScreenClicked()
+    {        
+        if (!isAcceptingInput)
+            return;
+        
+        nextStepRequested = true;
+        StartCoroutine(BeginInputCooldown());
+    }
+
+    IEnumerator BeginInputCooldown(float clickCooldownTime = 2.0f)
+    {
+        isAcceptingInput = false;
+        yield return new WaitForSeconds(clickCooldownTime);
+        isAcceptingInput = true;
+    }
 }
