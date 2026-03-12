@@ -3,10 +3,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 
-public class UIImageDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class UiImageDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("References")]
-    public RectTransform targetSlot;
+    public RectTransform dragTarget;
     
     [Header("Settings")]
     public float rotationCompletionThreshold = 0.3f;
@@ -43,10 +43,10 @@ public class UIImageDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         transform.SetAsLastSibling();
         
         dragStartWorldPosition = rectTransform.position;
-        totalDistanceToTarget = Vector2.Distance(dragStartWorldPosition, targetSlot.position);
+        totalDistanceToTarget = Vector2.Distance(dragStartWorldPosition, dragTarget.position);
         maxDistanceFromStart = 0f;
 
-        Vector3 initialDirection = targetSlot.position - rectTransform.position;
+        Vector3 initialDirection = dragTarget.position - rectTransform.position;
         alignRightSide = initialDirection.x >= 0;
     }
 
@@ -61,10 +61,10 @@ public class UIImageDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private void ApplyDynamicRotation()
     {
-        if (targetSlot == null || totalDistanceToTarget <= 0) return;
+        if (dragTarget == null || totalDistanceToTarget <= 0) return;
 
         // 1. Current direction to target
-        Vector3 direction = targetSlot.position - rectTransform.position;
+        Vector3 direction = dragTarget.position - rectTransform.position;
         float angleToTarget = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         // 2. Target angle based on which side leads
@@ -97,7 +97,7 @@ public class UIImageDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         if (IsOverlappingEnough())
         {
-            rectTransform.anchoredPosition = targetSlot.anchoredPosition;
+            rectTransform.anchoredPosition = dragTarget.anchoredPosition;
             rectTransform.localRotation = originalRotation; 
             myImage.color = snappedColor;
         }
@@ -109,8 +109,8 @@ public class UIImageDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private bool IsOverlappingEnough()
     {
-        float distance = Vector2.Distance(rectTransform.position, targetSlot.position);
-        float threshold = (targetSlot.rect.width * canvas.scaleFactor) * 0.5f;
+        float distance = Vector2.Distance(rectTransform.position, dragTarget.position);
+        float threshold = (dragTarget.rect.width * canvas.scaleFactor) * 0.5f;
         return distance < threshold;
     }
 

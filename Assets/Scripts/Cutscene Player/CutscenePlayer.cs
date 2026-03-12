@@ -30,7 +30,9 @@ public class CutscenePlayer : MonoBehaviour
 
     void ToggleClickable (bool toggle)
     {
-        GetComponent<BoxCollider2D>().enabled = toggle;
+        BoxCollider2D bc = GetComponent<BoxCollider2D>();
+        if (bc)
+            bc.enabled = toggle;
     }
 
 	void OnMouseDown ()

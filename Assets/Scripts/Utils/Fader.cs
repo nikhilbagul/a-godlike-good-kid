@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class Fader : MonoBehaviour
 {
@@ -39,6 +40,15 @@ public class Fader : MonoBehaviour
         fading = true;
     }
 
+    public void FadeInUiImage(Image spr, float duration = 2f)
+    {
+        spr.color = opaque;
+        if (spr)
+            StartCoroutine(Fade(() => spr.color.a < 1, spr, true, duration));
+
+        fading = true;
+    }
+
     public void FadePageIn() { FadeOut(); }
     public void FadeOut(SpriteRenderer spr = null, CanvasGroup cvg = null, float duration = 2f)
     {
@@ -47,6 +57,7 @@ public class Fader : MonoBehaviour
             if (!spr)
                 spr = GetComponent<SpriteRenderer>();
          
+            Debug.Log(spr);
             spr.color = transparent;
             if (spr)
                 StartCoroutine(Fade(() => spr.color.a > 0, spr, false, duration));
@@ -60,6 +71,15 @@ public class Fader : MonoBehaviour
         fading = true;
     }
 
+    public void FadeOutUiImage(Image spr, float duration = 2f)
+    {
+        spr.color = transparent;
+        if (spr)
+            StartCoroutine(Fade(() => spr.color.a > 0, spr, false, duration));
+        fading = true;
+    }
+
+
     public bool IsFadeComplete()
     {
         return !fading;
@@ -71,6 +91,20 @@ public class Fader : MonoBehaviour
     }
 
     IEnumerator Fade(Func<bool> condition, SpriteRenderer spr, bool makeOpaque, float duration)
+    {
+        increment = 1 / duration;        
+
+        Color c = spr.color;
+        while (spr && condition())
+        {
+            float a = spr.color.a + increment * Time.deltaTime * ((makeOpaque) ? 1 : -1);
+            spr.color = new Color(c.r, c.g, c.b, a);
+            yield return null;
+        }
+        fading = false;
+    }
+
+    IEnumerator Fade(Func<bool> condition, Image spr, bool makeOpaque, float duration)
     {
         increment = 1 / duration;        
 

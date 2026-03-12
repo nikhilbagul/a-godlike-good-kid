@@ -1,29 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class Ch1_P1 : PageManager 
 {
 	public static int numbOfFails;
     public GameObject allSprites;
-    public SpriteRenderer propCandle;
-    public SpriteRenderer propSalt;
-    public SpriteRenderer propCup;	
-	public SpriteRenderer emptyRestaurant;
-    public SpriteRenderer fayeErnestRestaurant;
-    public SpriteRenderer caption1;
-    public SpriteRenderer caption2;
-    public SpriteRenderer speechBubble1;
-    public SpriteRenderer speechBubble2;
-    public SpriteRenderer speechBubble3;
-    public SpriteRenderer speechBubble4;
-    public SpriteRenderer speechBubble5;
-    public SpriteRenderer speechBubble6;
-    public SpriteRenderer speechBubble7;
-    public SpriteRenderer speechBubble8;
+    public Image propCandle;
+    public Image propSalt;
+    public Image propCup;	
+	public Image emptyRestaurant;
+    public Image fayeErnestRestaurant;
+    public Image caption1;
+    public Image caption2;
+    public Image speechBubble1;
+    public Image speechBubble2;
+    public Image speechBubble3;
+    public Image speechBubble4;
+    public Image speechBubble5;
+    public Image speechBubble6;
+    public Image speechBubble7;
+    public Image speechBubble8;
     CutscenePlayer cutscenePlayer;
 	Fader faderUtility;
-	SpriteRenderer[] spriteRenderers;
+	Image[] spriteRenderers;
 
     bool isAcceptingInput = false;
     bool nextStepRequested = false;
@@ -32,7 +33,7 @@ public class Ch1_P1 : PageManager
 	{
 		cutscenePlayer = FindFirstObjectByType<CutscenePlayer>();
         faderUtility = FindFirstObjectByType<Fader>();
-		spriteRenderers = allSprites.GetComponentsInChildren<SpriteRenderer>();        
+		spriteRenderers = allSprites.GetComponentsInChildren<Image>();        
     }
 
 	protected override void Start()
@@ -66,51 +67,51 @@ public class Ch1_P1 : PageManager
             SetSpriteRenderersVisibility(false);            
 
             yield return new WaitForSeconds(2);
-
-			faderUtility.FadeIn(emptyRestaurant);
+            
+			faderUtility.FadeInUiImage(emptyRestaurant);
             Camera.main.GetComponent<CameraSaturation>().Desaturate();
             
             yield return new WaitUntil(() => nextStepRequested == true);
             nextStepRequested = false;
 
-            faderUtility.FadeIn(fayeErnestRestaurant);
-            faderUtility.FadeIn(propCandle);
-            faderUtility.FadeIn(propCup);
-            faderUtility.FadeIn(propSalt);
+            faderUtility.FadeInUiImage(fayeErnestRestaurant);
+            faderUtility.FadeInUiImage(propCandle);
+            faderUtility.FadeInUiImage(propCup);
+            faderUtility.FadeInUiImage(propSalt);
 
             yield return new WaitUntil(() => nextStepRequested == true);
             nextStepRequested = false;
 
-			faderUtility.FadeIn(caption1);
+			faderUtility.FadeInUiImage(caption1);
 
             yield return new WaitUntil(() => nextStepRequested == true);
             nextStepRequested = false;
 
-            faderUtility.FadeIn(speechBubble1);
+            faderUtility.FadeInUiImage(speechBubble1);
 
             yield return new WaitUntil(() => nextStepRequested == true);
             nextStepRequested = false;
 
-            faderUtility.FadeIn(speechBubble2);
+            faderUtility.FadeInUiImage(speechBubble2);
 
             yield return new WaitUntil(() => nextStepRequested == true);
             nextStepRequested = false;
 
-            faderUtility.FadeOut(speechBubble1, null, 0.5f);
-            faderUtility.FadeIn(speechBubble3, null, 2);
+            faderUtility.FadeOutUiImage(speechBubble1, 0.5f);
+            faderUtility.FadeInUiImage(speechBubble3, 0.5f);
 
             yield return new WaitUntil(() => nextStepRequested == true);
             nextStepRequested = false;
 
-            faderUtility.FadeOut(speechBubble2, null, 0.5f);
-            faderUtility.FadeIn(speechBubble4, null, 2);
+            faderUtility.FadeOutUiImage(speechBubble2, 0.5f);
+            faderUtility.FadeInUiImage(speechBubble4, 2);
 
             yield return new WaitUntil(() => nextStepRequested == true);
             nextStepRequested = false;
 
-            faderUtility.FadeOut(caption1, null, 1);
-            faderUtility.FadeOut(speechBubble3, null, 1);
-            faderUtility.FadeOut(speechBubble4, null, 1);
+            faderUtility.FadeOutUiImage(caption1, 1);
+            faderUtility.FadeOutUiImage(speechBubble3, 1);
+            faderUtility.FadeOutUiImage(speechBubble4, 1);
 
             yield return new WaitForSeconds(2.0f);            
 
@@ -120,17 +121,18 @@ public class Ch1_P1 : PageManager
 		else if (numbOfFails >= 1)
 		{            
             SetSpriteRenderersVisibility(false);            
-			faderUtility.FadeIn(fayeErnestRestaurant);
-            faderUtility.FadeIn(propCandle);
-            faderUtility.FadeIn(propCup);
-            faderUtility.FadeIn(propSalt);			
+			faderUtility.FadeInUiImage(fayeErnestRestaurant);
+            faderUtility.FadeInUiImage(propCandle);
+            faderUtility.FadeInUiImage(propCup);
+            faderUtility.FadeInUiImage(propSalt);			
         }
+        
 
 		yield return null;
 	}
 	void SetSpriteRenderersVisibility(bool isVisible)
 	{
-		foreach (SpriteRenderer sprite in spriteRenderers)
+		foreach (Image sprite in spriteRenderers)
 		{
 			if (isVisible)
 				sprite.color = new Color(1, 1, 1, 1);
