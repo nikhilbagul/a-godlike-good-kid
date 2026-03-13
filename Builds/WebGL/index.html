@@ -33,15 +33,27 @@
           h = w / ASPECT;
         }
 
-        // Don't upscale beyond native resolution
         if (w > BASE_WIDTH) {
           w = BASE_WIDTH;
           h = BASE_HEIGHT;
         }
 
-        var el = document.getElementById("unity-canvas");
-        el.style.width = Math.round(w) + "px";
-        el.style.height = Math.round(h) + "px";
+        w = Math.round(w);
+        h = Math.round(h);
+
+        // Resize the container
+        var container = document.getElementById("unity-canvas");
+        container.style.width = w + "px";
+        container.style.height = h + "px";
+
+        // Resize the actual Unity canvas element
+        var canvas = container.querySelector("canvas");
+        if (canvas) {
+          canvas.width = w;
+          canvas.height = h;
+          canvas.style.width = w + "px";
+          canvas.style.height = h + "px";
+        }
       }
 
       window.addEventListener("resize", resizeCanvas);
