@@ -4,26 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | A Godlike Good Kid</title>
-    <link rel="stylesheet" href="./style.css">    
     <script src="Build/UnityLoader.js"></script>
     <script>
-      var gameInstance = UnityLoader.instantiate("unity-canvas", "Build/WebGL.json");
+      var gameInstance = UnityLoader.instantiate("gameContainer", "Build/WebGL.json");
     </script>
   </head>
-
-  <body>    
-      <div id="unity-canvas" width=769 height=1024 style="
-                              width: 769px; 
-                              height: 1024px; 
-                              background: #000000; 
-                              position: absolute; 
-                              top: 50%;
-                              left: 50%;
-                              transform: translate(-50%, -50%);
-                              margin-top: 5%;
-                              margin-bottom: 5%;"
-                              >
-      </div>
-    
+  <body>
+    <div id="gameContainer" style="width: 769px; height: 1024px; margin: auto"></div>
   </body>
 </html>
