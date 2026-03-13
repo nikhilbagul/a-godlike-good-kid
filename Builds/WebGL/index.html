@@ -12,18 +12,52 @@
   </head>
 
   <body>    
-      <div id="unity-canvas" width=769 height=1024 style="
-                              width: 769px; 
-                              height: 1024px; 
-                              background: #000000; 
-                              position: absolute; 
-                              top: 50%;
-                              left: 50%;
-                              transform: translate(-50%, -50%);
-                              margin-top: 5%;
-                              margin-bottom: 5%;"
-                              >
-      </div>
-    
+    <div id="unity-canvas"></div>
+
+    <script>
+      var BASE_WIDTH = 769;
+      var BASE_HEIGHT = 1024;
+      var PADDING = 20;
+      var ASPECT = BASE_WIDTH / BASE_HEIGHT;
+
+      function resizeCanvas() {
+        var maxW = window.innerWidth - PADDING * 2;
+        var maxH = window.innerHeight - PADDING * 2;
+        var w, h;
+
+        if (maxW / maxH > ASPECT) {
+          h = maxH;
+          w = h * ASPECT;
+        } else {
+          w = maxW;
+          h = w / ASPECT;
+        }
+
+        if (w > BASE_WIDTH) {
+          w = BASE_WIDTH;
+          h = BASE_HEIGHT;
+        }
+
+        w = Math.round(w);
+        h = Math.round(h);
+
+        // Resize the container
+        var container = document.getElementById("unity-canvas");
+        container.style.width = w + "px";
+        container.style.height = h + "px";
+
+        // Resize the actual Unity canvas element
+        var canvas = container.querySelector("canvas");
+        if (canvas) {
+          canvas.width = w;
+          canvas.height = h;
+          canvas.style.width = w + "px";
+          canvas.style.height = h + "px";
+        }
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+    </script>
   </body>
 </html>

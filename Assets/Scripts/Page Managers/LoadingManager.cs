@@ -7,30 +7,20 @@ public class LoadingManager : MonoBehaviour
 {
 
     public CanvasGroup loadingScreenCanvas;
+    public Button loadButton;
 
-    private string fileName = "data.sav";
-    string path = "";
-
-    GameObject loadButton;
     void Start()
     {
-        loadButton = GameObject.Find("LoadGameButton");
-        loadButton.GetComponent<Button>().interactable = false;
+        if (loadButton == null)
+            loadButton = GameObject.Find("LoadGameButton").GetComponent<Button>();
+        loadButton.interactable = false;
 
-        //get current guid
         SaveData data = Persistor.Load();
-
-
-#if !UNITY_EDITOR
-        path = Application.persistentDataPath + "/";
-        //userDataPath = Application.persistentDataPath + "/";
-#endif
-        path += fileName;
-        if (File.Exists(path) && Persistor.Load().levelName != "NULL")
-            loadButton.GetComponent<Button>().interactable = true;
+        if (data.levelName != "NULL")
+            loadButton.interactable = true;
 
         StartCoroutine(DelayedShowCanvas());
-    } 
+    }
 
     IEnumerator DelayedShowCanvas()
     {
@@ -76,7 +66,9 @@ public class LoadingManager : MonoBehaviour
 
     IEnumerator DelayedStart()
     {
-        GameObject.Find("LoadGameButton").GetComponent<Button>().interactable = false;
+        if (loadButton == null)
+            loadButton = GameObject.Find("LoadGameButton").GetComponent<Button>();
+        loadButton.interactable = false;
         yield return new WaitForSeconds(0.5f);
         CheckpointManager.NewGame();
     }
