@@ -96,7 +96,7 @@ public class goatManGyro : MonoBehaviour {
             y = Input.acceleration.y;
             x = Input.acceleration.x;
 #endif
-#if (UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_WEBPLAYER)
+#if (UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_WEBGL)
 			y = Input.GetAxis ("Vertical") * KBInputMultiplier;
 			x = Input.GetAxis ("Horizontal") * KBInputMultiplier;
 #endif

@@ -14,7 +14,7 @@ public class LoadingManager : MonoBehaviour
     GameObject loadButton;
     void Start()
     {
-        loadButton = GameObject.Find("load game button");
+        loadButton = GameObject.Find("LoadGameButton");
         loadButton.GetComponent<Button>().interactable = false;
 
         //get current guid
@@ -76,7 +76,7 @@ public class LoadingManager : MonoBehaviour
 
     IEnumerator DelayedStart()
     {
-        GameObject.Find("New game button").GetComponent<Button>().interactable = false;
+        GameObject.Find("LoadGameButton").GetComponent<Button>().interactable = false;
         yield return new WaitForSeconds(0.5f);
         CheckpointManager.NewGame();
     }

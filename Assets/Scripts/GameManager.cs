@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public static readonly string _GameVersion = "v00.02.04";
 
     [Header("Prefabs")]
-    public GameObject _debugger;
+    public GameObject _debuggerPrefab;
     public GameObject _UICanvas;
 
     [Header("Resources")]
@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     [Header("Variables")]
     public bool debug = true;
     [SerializeField]
-    public bool sendTelemetry = true;
+    public bool sendTelemetry = false;
 
     [SerializeField]
     private bool aspectRatioAware = true;
@@ -51,6 +51,9 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
         // Singleton
+
+        // Global switch to enable/disable debugging
+        Debug.unityLogger.logEnabled = debug;        
     }
 
     void Start ()
@@ -60,7 +63,7 @@ public class GameManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         if (!currentPageManager)
-            InitScene();
+            InitScene();        
     }
 
     // Begin new scene
@@ -71,8 +74,7 @@ public class GameManager : MonoBehaviour
             float ratio = (float)Screen.width / (float)Screen.height;
             float newSize = Camera.main.orthographicSize;
             
-            Debug.Log(newSize);
-
+            Debug.Log(newSize);            
 
             /* 
              * Assuming linear transposition
@@ -98,10 +100,11 @@ public class GameManager : MonoBehaviour
         InstantiatePrefabs();
         ToggleNext(false);
         FindObjectOfType<Fader>().FadePageIn();
+
         if (Debugger.ToggleDebugSwitch != null)
             Debugger.ToggleDebugSwitch(debug);
 
-        Debugger.LogMessage("New scene triggered");
+        Debugger.LogMessage("New scene triggered");        
     }
 
     void InstantiatePrefabs()
@@ -109,7 +112,7 @@ public class GameManager : MonoBehaviour
         Debugger _debuggerParent = FindObjectOfType<Debugger>();
         if (_debuggerParent)
             Destroy(_debuggerParent.gameObject);
-        debuggerParent = Instantiate(_debugger);
+        debuggerParent = Instantiate(_debuggerPrefab);
         debuggerParent.name = "Debugger Tools";
 
         UICanvas = GameObject.Find("UI Canvas");
@@ -135,7 +138,7 @@ public class GameManager : MonoBehaviour
     {
         if (debug != _debug)
         {
-            Debug.Log("Debugging turned " + (debug ? "on" : "off") + ".");
+            Debug.Log("Debugging turned " + (debug ? "on" : "off") + ".");            
             if (Debugger.ToggleDebugSwitch != null)
                 Debugger.ToggleDebugSwitch(debug);
         }

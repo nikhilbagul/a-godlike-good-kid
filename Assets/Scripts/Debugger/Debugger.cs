@@ -39,7 +39,6 @@ public class Debugger : MonoBehaviour
 
     void DelayedStart()
     {
-        //transform.GetComponentInChildren<Toggle>().isOn = GameManager.Instance.sendTelemetry;
         sendTelemetry.isOn = GameManager.Instance.sendTelemetry;
         GUID.text = Persistor.Load().GetGUID;
     }
