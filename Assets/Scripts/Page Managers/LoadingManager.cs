@@ -11,26 +11,33 @@ public class LoadingManager : MonoBehaviour
     private string fileName = "data.sav";
     string path = "";
 
-    GameObject loadButton;
+    public Button loadButton;
+    
     void Start()
     {
-        loadButton = GameObject.Find("LoadGameButton");
-        loadButton.GetComponent<Button>().interactable = false;
+        if (loadButton == null)
+            loadButton = GameObject.Find("LoadGameButton").GetComponent<Button>();
+        loadButton.interactable = false;
 
-        //get current guid
-        SaveData data = Persistor.Load();
-
-
-#if !UNITY_EDITOR
+    #if !UNITY_EDITOR
         path = Application.persistentDataPath + "/";
-        //userDataPath = Application.persistentDataPath + "/";
-#endif
+    #endif
         path += fileName;
-        if (File.Exists(path) && Persistor.Load().levelName != "NULL")
-            loadButton.GetComponent<Button>().interactable = true;
+
+        try
+        {
+            SaveData data = Persistor.Load();
+            if (File.Exists(path) && data.levelName != "NULL")
+                loadButton.interactable = true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("Save data not available yet: " + e.Message);
+            // loadButton stays non-interactable, which is fine
+        }
 
         StartCoroutine(DelayedShowCanvas());
-    } 
+    }
 
     IEnumerator DelayedShowCanvas()
     {
@@ -76,7 +83,9 @@ public class LoadingManager : MonoBehaviour
 
     IEnumerator DelayedStart()
     {
-        GameObject.Find("LoadGameButton").GetComponent<Button>().interactable = false;
+        if (loadButton == null)
+            loadButton = GameObject.Find("LoadGameButton").GetComponent<Button>();
+        loadButton.interactable = false;
         yield return new WaitForSeconds(0.5f);
         CheckpointManager.NewGame();
     }
