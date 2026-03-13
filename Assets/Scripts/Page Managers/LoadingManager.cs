@@ -27,7 +27,7 @@ public class LoadingManager : MonoBehaviour
         try
         {
             SaveData data = Persistor.Load();
-            if (File.Exists(path) && data.levelName != "NULL")
+            if (data.levelName != "NULL")
                 loadButton.interactable = true;
         }
         catch (System.Exception e)

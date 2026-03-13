@@ -15,7 +15,8 @@ public static class GUIDAlphabet
 [System.Serializable]
 public class SaveData
 {    
-    string GUID;
+    [SerializeField]
+    private string GUID;
     public string GetGUID { get { return GUID; } }
     public string levelName;
 
@@ -47,23 +48,77 @@ public class SaveData
 public static class Persistor
 {
     static string fileName = "data.sav";
+    static string prefsKey = "save_data";
 
     public static SaveData Load()
     {
-        string path = "";
+#if UNITY_WEBGL && !UNITY_EDITOR
+        return LoadWebGL();
+#else
+        return LoadFile();
+#endif
+    }
 
+    public static void Save(SaveData saveData)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        SaveWebGL(saveData);
+#else
+        SaveFile(saveData);
+#endif
+    }
+
+    public static void Delete()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        PlayerPrefs.DeleteKey(prefsKey);
+        PlayerPrefs.Save();
+#else
+        string path = GetPath();
+        if (File.Exists(path))
+            File.Delete(path);
+#endif
+    }
+
+    // --- WebGL: PlayerPrefs with JSON ---
+
+    static SaveData LoadWebGL()
+    {
+        if (PlayerPrefs.HasKey(prefsKey))
+        {
+            string json = PlayerPrefs.GetString(prefsKey);
+            return JsonUtility.FromJson<SaveData>(json);
+        }
+        return new SaveData();
+    }
+
+    static void SaveWebGL(SaveData saveData)
+    {
+        string json = JsonUtility.ToJson(saveData);
+        PlayerPrefs.SetString(prefsKey, json);
+        PlayerPrefs.Save();  // forces flush to IndexedDB
+        Debugger.LogMessage(saveData + " saved.");
+    }
+
+    // --- Standalone/Editor: BinaryFormatter + FileStream ---
+
+    static string GetPath()
+    {
+        string path = "";
 #if !UNITY_EDITOR
         path = Application.persistentDataPath + "/";
 #endif
-        path += fileName;
-        Debug.Log(path);
+        return path + fileName;
+    }
 
+    static SaveData LoadFile()
+    {
+        string path = GetPath();
         SaveData saveData = new SaveData();
-        FileStream saveFile;
 
         if (File.Exists(path))
         {
-            saveFile = new FileStream(path, FileMode.Open);
+            FileStream saveFile = new FileStream(path, FileMode.Open);
             BinaryFormatter formatter = new BinaryFormatter();
             saveData = (SaveData)formatter.Deserialize(saveFile);
             saveFile.Close();
@@ -71,15 +126,9 @@ public static class Persistor
         return saveData;
     }
 
-    public static void Save(SaveData saveData)
+    static void SaveFile(SaveData saveData)
     {
-        string path = "";
-
-#if !UNITY_EDITOR
-        path = Application.persistentDataPath + "/";
-#endif
-        path += fileName;
-
+        string path = GetPath();
         FileStream saveFile = new FileStream(path, FileMode.Create);
         BinaryFormatter formatter = new BinaryFormatter();
         try
@@ -96,25 +145,6 @@ public static class Persistor
         {
             saveFile.Close();
         }
-    }
-
-    public static void Delete()
-    {
-        string path = "";
-
-#if !UNITY_EDITOR
-        path = Application.persistentDataPath + "/";
-#endif
-        path += fileName;
-
-        if (File.Exists(path))
-        {
-            Debugger.LogMessage("Save file found and deleted.");
-            File.Delete(path);
-        }
-        else
-            Debugger.LogMessage("Save file not found.");
-
     }
 
     public static void ObliterateCheckpoint()
