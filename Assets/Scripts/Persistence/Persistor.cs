@@ -96,8 +96,9 @@ public static class Persistor
     {
         string json = JsonUtility.ToJson(saveData);
         PlayerPrefs.SetString(prefsKey, json);
-        PlayerPrefs.Save();  // forces flush to IndexedDB
-        Debugger.LogMessage(saveData + " saved.");
+        PlayerPrefs.Save();
+        if (Debugger.LogMessage != null)
+            Debugger.LogMessage(saveData + " saved.");
     }
 
     // --- Standalone/Editor: BinaryFormatter + FileStream ---
@@ -134,8 +135,9 @@ public static class Persistor
         try
         {
             formatter.Serialize(saveFile, saveData);
-            Debugger.LogMessage(saveData + " saved.");
-        }
+            if (Debugger.LogMessage != null)
+                Debugger.LogMessage(saveData + " saved.");
+        }        
         catch (System.Exception e)
         {
             Debug.Log("Failed to serialize. Reason: " + e.Message);
