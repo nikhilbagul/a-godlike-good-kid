@@ -7,34 +7,17 @@ public class LoadingManager : MonoBehaviour
 {
 
     public CanvasGroup loadingScreenCanvas;
-
-    private string fileName = "data.sav";
-    string path = "";
-
     public Button loadButton;
-    
+
     void Start()
     {
         if (loadButton == null)
             loadButton = GameObject.Find("LoadGameButton").GetComponent<Button>();
         loadButton.interactable = false;
 
-    #if !UNITY_EDITOR
-        path = Application.persistentDataPath + "/";
-    #endif
-        path += fileName;
-
-        try
-        {
-            SaveData data = Persistor.Load();
-            if (data.levelName != "NULL")
-                loadButton.interactable = true;
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogWarning("Save data not available yet: " + e.Message);
-            // loadButton stays non-interactable, which is fine
-        }
+        SaveData data = Persistor.Load();
+        if (data.levelName != "NULL")
+            loadButton.interactable = true;
 
         StartCoroutine(DelayedShowCanvas());
     }
