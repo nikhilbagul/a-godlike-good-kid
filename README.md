@@ -12,7 +12,7 @@ v3 - 2026 (WebGL, iOS - iPad only)
 iOS (iPad exclusive), Android (under Dev)
 
 # Tech stack
-Unity, C#, Fungus, iTween
+Unity, C#
 
 # My role in the team
 - Developer and the Development Director
