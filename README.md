@@ -23,7 +23,7 @@ Unity, C#
 - Also assisted in creating Art assets for animation and affordance improvement purposes.
 
 
-# [UPDATE} 
+# [UPDATE]
 - Migration from Unity 5 to Unity 2017.4.40f1 - COMPLETE
 - Migration from Unity 2017.4.40f1 to Unity 6000.0.62f1 - IN PROGRESS
 - Newer version will move away from External package dependencies (Fungus, iTween)
