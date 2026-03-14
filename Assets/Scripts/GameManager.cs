@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public AudioClip[] pageFlip;
 
     [Header("Variables")]
-    public bool debug = true;
+    public bool debug = false;
     [SerializeField]
     public bool sendTelemetry = false;
 
