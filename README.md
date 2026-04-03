@@ -27,4 +27,4 @@ Unity, C#
 - Migration from Unity 5 to Unity 2017.4.40f1 - COMPLETE
 - Migration from Unity 2017.4.40f1 to Unity 6000.0.62f1 - IN PROGRESS
 - Newer version will move away from External package dependencies (Fungus, iTween)
-- Newer version will have remasteered UI layout and gameplay features - Stay tuned
+- Newer version will have remastered UI layout and gameplay features - Stay tuned
