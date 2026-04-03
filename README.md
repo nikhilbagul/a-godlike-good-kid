@@ -4,12 +4,13 @@ A Godlike Good Kid is an interactive comic book experience that will take you on
 This game was a part of our capstone project in our Master's program at UC Santa Cruz. The team consisted of 4 developers, 14 artists, and 2 audio designers.
 
 # Time of Release
-v1 - June 2016 (iOS - iPad only) 
-v2 - 2024 (WebGL) 
+v1 - June 2016 (iOS - iPad only) <br>
+v2 - 2024 (WebGL) <br>
 v3 - 2026 (WebGL, iOS - iPad only) 
 
 # Platforms
-iOS (iPad exclusive), Android (under Dev)
+iOS (iPad exclusive) <br>
+Android (under Dev)
 
 # Tech stack
 Unity, C#
